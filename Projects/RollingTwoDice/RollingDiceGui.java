@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.IntrospectionException;
 import java.util.Random;
 
 public class RollingDiceGui extends JFrame {
@@ -57,17 +58,23 @@ public class RollingDiceGui extends JFrame {
                               int diceOne = rand.nextInt(1,7);
                               int diceTwo = rand.nextInt(1,7);
 
-                              ImgService.updateImg(diceOne, "resources/dice" + diceOne + ".png");
-                              ImgService.updateImg(diceTwo,"resources/dice" + diceTwo + ".png" );
+                              ImgService.updateImg(diceOneImg, "resources/dice" + diceOne + ".png");
+                              ImgService.updateImg(diceTwoImg,"resources/dice" + diceTwo + ".png" );
 
                               repaint();
                               revalidate();
 
-                              Thread.sleep();
+                              Thread.sleep(60);
+
+                              endTime = System.currentTimeMillis();
                           }
+                          rollButton.setEnabled(true);
+                      }catch (InterruptedException e){
+                          System.out.println("Rolling Dice Interrupted" + e);
                       }
                     }
                 });
+                rollThread.start();
             }
         });
 
