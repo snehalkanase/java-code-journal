@@ -8,15 +8,25 @@ import java.io.InputStream;
 public class ImgService {
     public static JLabel loadImg(String filePath){
         BufferedImage image ;
-        JLabel imageComtainer;
+        JLabel imageContainer;
         try {
             InputStream inputStream = ImgService.class.getResourceAsStream(filePath);
             image = ImageIO.read(inputStream);
-            imageComtainer = new JLabel(new ImageIcon(image));
-            return imageComtainer;
+            imageContainer = new JLabel(new ImageIcon(image));
+            return imageContainer;
         } catch (Exception e) {
             System.out.println("Error loading image");
             return null;
+        }
+    }
+    public static void updateImg(JLabel imageContainer, String filePath){
+        BufferedImage image ;
+        try{
+            InputStream inputStream = ImgService.class.getResourceAsStream(filePath);
+            image = ImageIO.read(inputStream);
+            imageContainer.setIcon(new ImageIcon(image));
+        } catch(Exception e){
+            System.out.println("Error loading image: " + e);
         }
     }
 }

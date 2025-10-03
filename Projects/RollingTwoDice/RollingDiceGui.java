@@ -44,7 +44,30 @@ public class RollingDiceGui extends JFrame {
         rollButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                rollButton.setEnabled(false);
 
+                long startTime = System.currentTimeMillis();
+                Thread rollThread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                       long endTime = System.currentTimeMillis();
+
+                      try{
+                          while((endTime - startTime )/100F < 3) {
+                              int diceOne = rand.nextInt(1,7);
+                              int diceTwo = rand.nextInt(1,7);
+
+                              ImgService.updateImg(diceOne, "resources/dice" + diceOne + ".png");
+                              ImgService.updateImg(diceTwo,"resources/dice" + diceTwo + ".png" );
+
+                              repaint();
+                              revalidate();
+
+                              Thread.sleep();
+                          }
+                      }
+                    }
+                });
             }
         });
 
