@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.IntrospectionException;
 import java.util.Random;
 
 public class RollingDiceGui extends JFrame {
