@@ -2,7 +2,7 @@ package AtmMachine;
 
 public class App {
     public static void main(String[] args) {
-        Login login = new Login();
-        login.loginToAccount();
+        LoginService loginService = new LoginService();
+        loginService.start();
     }
 }
