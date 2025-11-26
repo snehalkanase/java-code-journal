@@ -1,0 +1,227 @@
+
+1. App.java
+Purpose
+This is the starting point of the program.
+
+What it Does
+Uses SwingUtilities.invokeLater() to safely start the UI.
+
+Opens the main game window (GameBoard).
+
+Key Points
+main() launches the game screen.
+
+The game UI runs on the Swing Event Dispatch Thread.
+
+2. Direction.java
+Purpose
+Defines four directions the snake can move.
+
+Values
+UP
+DOWN
+LEFT
+RIGHT
+We use an enum to avoid typing strings repeatedly and to make directions type-safe.
+
+3. GameBoard.java
+Purpose
+Creates the game window.
+
+What is inside?
+A window (JFrame) with a fixed size.
+
+A GamePanel (the actual game drawing area).
+
+Window is non-resizable and centered on screen.
+
+Important Concepts
+
+setPreferredSize() → sets screen resolution.
+
+add(new GamePanel()) → attaches game display to window.
+
+pack() → fits window to components.
+
+setLocationRelativeTo(null) → centers window.
+
+4. GamePanel.java
+This is the heart of the game.
+It:
+
+Draws the snake and food
+
+Handles movement
+
+Detects collisions
+
+Shows score
+
+Handles game restart
+
+Runs game loop using a timer
+
+Let’s break it down.
+
+Grid Settings
+CELL_SIZE = 15
+GRID_COLS = BOARD_WIDTH / CELL_SIZE
+GRID_ROWS = BOARD_HEIGHT / CELL_SIZE
+Meaning
+
+The board is divided into small equal blocks (like tiles).
+Each grid cell is 15x15 pixels.
+All positions (snake and food) live on this grid.
+
+Snake Representation
+LinkedList<Point> snake = new LinkedList<>();
+
+Each body segment is a Point(x, y) inside the grid.
+
+First element → snake’s head.
+
+Last element → snake’s tail.
+
+
+
+Food
+
+Point food;
+
+Food is also a grid position.
+
+Placed randomly on empty grid cells.
+
+Game Engine
+Timer timer;
+Swing Timer fires an event every few milliseconds.
+
+Each event updates the game (movement and repaint).
+
+Keyboard Input
+A key listener handles:
+
+W / ↑ → Move Up
+
+S / ↓ → Move Down
+
+A / ← → Move Left
+
+D / → → Move Right
+
+R → Restart after game over
+
+We prevent the snake from reversing direction instantly (e.g., going right then left immediately).
+
+initGame()
+This method:
+
+
+Clears old snake
+
+Places snake in middle of the board
+
+Generates food
+
+Starts the timer
+
+placeFood()
+This ensures:
+
+Food appears inside the grid
+
+Food never overlaps the snake
+
+It keeps picking random coordinates until a valid empty spot is found.
+
+Game Loop – actionPerformed()
+Runs continuously:
+
+
+If game is not over → move snake.
+
+Then redraw everything.
+
+updateGame()
+This method:
+
+1️⃣ Moves the snake head
+Creates a new head based on current direction.
+
+2️⃣ Checks wall collision
+If head goes out of grid → game over.
+
+3️⃣ Checks self collision
+If head hits body → game over.
+
+4️⃣ Checks win condition
+If snake fills entire grid → game over.
+
+5️⃣ Inserts new head
+If head equals food → grow snake + increase score + place new food.
+
+Otherwise → move normally by removing tail.
+
+Drawing – paintComponent()
+Handles all graphics:
+
+Draws:
+Food (Red circle)
+
+Snake (Green blocks)
+
+Score (Top-left)
+
+Game Over message (when game ends)
+
+Why repaint() works
+Because Timer calls repaint → game refreshes continuously like animation.
+
+Game Flow Summary
+
+
+On Start:
+Create snake in center
+
+Place food
+
+Start timer
+
+Repeat every tick:
+Move snake
+
+Detect collisions
+
+Grow or move tail
+
+Redraw screen
+
+If Collides:
+
+Stop timer
+
+Show GAME OVER message
+
+Why This Project Is Good for Beginners
+It teaches:
+
+✔ Java classes & objects
+✔ Using Swing for GUI
+✔ Timer-based game loops
+✔ Keyboard handling
+✔ Drawing graphics
+✔ Data structures (LinkedList)
+✔ Collision logic
+✔ Clean separation of concerns
+
+Beginner Learning Takeaways
+
+A simple game loop can be made using javax.swing.Timer
+
+A snake can be represented as a list of grid positions
+
+Graphics are drawn in paintComponent()
+
+Games require constant screen updates using repaint()
+
+Keyboard events are essential for interactive games
