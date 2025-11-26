@@ -1,0 +1,224 @@
+What I Built
+
+I created a simple paint application in Java Swing that allows the user to:
+
+Choose a drawing color
+
+Click and drag to draw on a canvas
+
+Reset the canvas
+
+Store drawing paths so painting remains visible after redraws
+
+I built the application using:
+
+Swing JFrame for the main window
+
+A custom Canvas class extending JPanel
+
+Mouse event handling
+
+paintComponent() for drawing
+
+Collections (List) for storing points
+
+Concepts Learned
+1. Swing Event Dispatch Thread (EDT)
+
+The program begins with:
+
+SwingUtilities.invokeLater(...)
+
+
+Reason:
+
+All Swing UI updates must run on the EDT.
+
+This avoids UI freeze and ensures thread-safety.
+
+2. Custom Painting with paintComponent()
+
+Drawing directly using getGraphics() only draws temporarily, and the image disappears on window repaint.
+
+Correct approach:
+
+Store all drawn points and lines
+
+Override paintComponent(Graphics g)
+
+Repaint the drawing whenever the system requests it
+
+This is how professional GUI drawing works.
+
+3. Mouse Events
+
+Used a MouseAdapter to handle:
+
+mousePressed – start a new stroke
+
+mouseDragged – draw while moving
+
+mouseReleased – store completed stroke
+
+4. Data Structure Design
+
+I used two structures:
+
+currentPath – stores the points of the current stroke
+
+allPath – stores all strokes
+
+Conceptually:
+
+allPath   = List of paths
+currentPath = List of points in current stroke
+
+
+So every stroke is saved and can be redrawn later.
+
+5. ColorPoint Class
+
+A simple object storing:
+
+x coordinate
+
+y coordinate
+
+Color at the point
+
+This makes it easy to replay drawing history.
+
+PROBLEMS FACED AND HOW THEY WERE RESOLVED
+Problem 1: List Type Parameter Error
+
+Error:
+
+Type 'java.awt.List' does not have type parameters
+
+
+Reason:
+
+I imported java.awt.*, which also contains a class named List
+
+I also needed java.util.List
+
+Compiler got confused because both exist
+
+Solution:
+
+Use java.util.List explicitly
+
+Or avoid importing java.awt.*
+
+Lesson:
+
+java.awt.List (GUI component)
+
+java.util.List (collections)
+
+Problem 2: NullPointerException on currentPath
+
+Error:
+
+Cannot invoke currentPath.isEmpty() because currentPath is null
+
+
+Why it happened:
+
+currentPath was initialized in mousePressed
+
+But if I drag without pressing first → mouseDragged was called while currentPath was still null
+
+Also after mouseReleased, I set currentPath = null, so dragging again caused the same issue
+
+Solution:
+
+Always initialize currentPath in mousePressed
+
+Never use it without ensuring it’s not null
+
+Key learning:
+
+Mouse events occur independently
+
+I must design state carefully
+
+Problem 3: Overwriting allPath
+
+Initially I did this inside mousePressed:
+
+allPath = new ArrayList<>();
+
+
+This deleted all previously drawn strokes on every new click.
+
+Solution:
+
+Only initialize allPath once in the constructor
+
+Not inside mouse event methods
+
+Lesson:
+
+Putting reset logic inside a drawing event destroys existing data
+
+Problem 4: Null Path in paintComponent
+
+Error:
+
+Cannot invoke iterator() because path is null
+
+
+Reason:
+
+If I accidentally added currentPath while it was null, allPath contained a null entry
+
+Solution:
+
+Ensure currentPath is created before adding to allPath
+
+Defensive programming: ignore null entries when drawing
+
+PROBLEM 5: Drawing Disappears on Repaint
+
+Issue:
+
+Lines drawn using getGraphics() disappear when the system repaints the window
+
+Reason:
+
+Direct drawing on the screen is temporary
+
+The next repaint overwrites it
+
+Correct approach:
+
+Store drawing in memory (allPath)
+
+Draw only inside paintComponent()
+
+Lesson:
+
+paintComponent() is the correct place for all permanent drawing
+
+IMPROVEMENTS POSSIBLE
+
+Avoid using getGraphics() in mouse events
+
+Always draw using paintComponent()
+
+Use a double buffer for smoother strokes
+
+Add undo/redo by managing stack of paths
+
+KEY TAKEAWAYS
+
+Swing components must be updated on the Event Dispatch Thread.
+
+Panel painting must be handled inside paintComponent().
+
+Game/drawing programs maintain internal state and redraw from it.
+
+Avoid wildcard imports when classes conflict.
+
+NIPE (NullPointerException) usually means object lifecycle not managed correctly.
